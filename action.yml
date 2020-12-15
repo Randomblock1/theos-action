@@ -34,7 +34,7 @@ runs:
       shell: bash
       run: |
         cd ${{ github.workspace }}/${{ inputs.theos-dir }}/sdks
-        curl -LO ${{ inputs.theos-src }}/archive/master.zip
+        curl -LO ${{ inputs.theos-sdks }}/archive/master.zip
         TMP=$(mktemp -d)
         unzip master.zip -d $TMP
         mv $TMP/*-master/*.sdk $THEOS/sdks
