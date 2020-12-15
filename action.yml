@@ -31,4 +31,8 @@ runs:
     - name: get sdks
       shell: bash
       run: |
-        git clone ${{ inputs.theos-sdks }} ${{ github.workspace }}/${{ inputs.theos-dir }}/sdks --depth=1
+        cd ${{ github.workspace }}/${{ inputs.theos-dir }}/sdks
+        git init
+        git remote add origin ${{ inputs.theos-sdks }}
+        git fetch origin --depth=1
+        git reset --hard origin/master || git reset --hard origin/main
