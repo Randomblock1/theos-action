@@ -34,8 +34,8 @@ runs:
       shell: bash
       run: |
         cd ${{ github.workspace }}/${{ inputs.theos-dir }}/sdks
-        git init
-        git remote add origin ${{ inputs.theos-sdks }}
-        git fetch origin --depth=1
-        git reset --hard origin/master || git reset --hard origin/main
-        echo "SDKs successfully obtained!"
+         curl -LO ${{ inputs.theos-src }}/archive/master.zip
+         TMP=$(mktemp -d)
+         unzip master.zip -d $TMP
+         mv $TMP/*-master/*.sdk $THEOS/sdks
+         rm -r master.zip $TMP
