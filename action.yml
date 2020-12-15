@@ -6,11 +6,11 @@ inputs:
     required: false
     default: theos
   theos-src:
-    description: 'Where to fetch Theos from (git URL)'
+    description: 'Where to fetch Theos from (github URL)'
     required: false
     default: 'https://github.com/theos/theos'
   theos-sdks:
-    description: 'Where to get the SDKs from (git URL)'
+    description: 'Where to get the SDKs from (github URL)'
     required: false
     default: 'https://github.com/theos/sdks'
 runs:
@@ -34,8 +34,8 @@ runs:
       shell: bash
       run: |
         cd ${{ github.workspace }}/${{ inputs.theos-dir }}/sdks
-         curl -LO ${{ inputs.theos-src }}/archive/master.zip
-         TMP=$(mktemp -d)
-         unzip master.zip -d $TMP
-         mv $TMP/*-master/*.sdk $THEOS/sdks
-         rm -r master.zip $TMP
+        curl -LO ${{ inputs.theos-src }}/archive/master.zip
+        TMP=$(mktemp -d)
+        unzip master.zip -d $TMP
+        mv $TMP/*-master/*.sdk $THEOS/sdks
+        rm -r master.zip $TMP
