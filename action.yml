@@ -1,0 +1,51 @@
+name: 'Install Theos'
+description: 'Install Theos and prepare it for building projects'
+inputs:
+  theos-dir:
+    description: 'Where to install Theos (relative to the repo workspace itself)'
+    required: false
+    default: theos
+  theos-src:
+    description: 'Where to fetch Theos from (git URL)'
+    required: false
+    default: 'https://github.com/theos/theos'
+  theos-sdks:
+    description: 'Where to get the SDKs from (git URL)'
+    required: false
+    default: 'https://github.com/theos/sdks'
+  use-cache:
+    description: 'Whether to cache the SDKs or not (true/false)'
+    required: false
+    default: true
+runs:
+  using: "composite"
+  steps:
+    - name: prepare environment
+      run: |
+        brew install ldid make
+        echo "THEOS=$GITHUB_WORKSPACE/${{ inputs.theos-dir }}" >> $GITHUB_ENV
+        echo "PATH=$PATH:/usr/local/opt/make/libexec/gnubin" >> $GITHUB_ENV
+
+    - name: verify updated cache
+      id: verify-cache
+      if: inputs.use-cache = 'true'
+      run: |
+        echo "::set-output name=theos-heads::`git ls-remote ${{ inputs.theos-src }} | head -n 1 | cut -f 1`-`git ls-remote ${{ inputs.theos-sdks }} | head -n 1 | cut -f 1`"
+
+    - name: use cache
+      id: cache
+      if: inputs.use-cache = 'true'
+      uses: actions/cache@v2
+      with:
+        path: ${{ github.workspace }}/${{ inputs.theos-dir }}
+        key: ${{ runner.os }}-${{ steps.verify-cache.outputs.theos-heads }}
+
+    - name: get theos
+      if: steps.cache.outputs.cache-hit != 'true'
+      run: |
+        git clone ${{ inputs.theos-src }} ${{ github.workspace }}/${{ inputs.theos-dir }} --recursive
+
+    - name: get sdks
+      if: steps.cache.outputs.cache-hit != 'true'
+      run: |
+        git clone ${{ inputs.theos-sdks }} ${{ github.workspace }}/${{ inputs.theos-dir }}/sdks --depth=1
