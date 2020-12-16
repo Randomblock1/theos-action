@@ -1,14 +1,17 @@
 # theos-action
 _Use Theos in your GitHub Actions to build iOS tweaks, even without a Mac._
 
+### Wait, what's Theos?
+[Theos](https://github.com/theos/theos) is a cross-platform building suite for iOS and MacOS. It's mainly used for developing and compiling jailbroken iOS tweaks for the iPhone/iPad.
+
 ## What's new
 v1: Initial release. Only MacOS support, and only supports 1 SDK repo (although you can just run it a few times or do it yourself). It works, but it is probably not very efficient.
 
 ## Usage
-MAKE SURE YOU'RE USING A MACOS RUNNER!!! Linux support may be added if there is enough demand, but for now only Mac is supported.
+MAKE SURE YOU'RE USING THIS WITH A MACOS RUNNER!!! Linux support may be added if there is enough demand, but for now only Mac is supported.
 
 ```
-- uses: Randomblock1/theos-action@main
+- uses: Randomblock1/theos-action@v1
   with:
     # This is where Theos is stored, relative to the runner workspace.
     # By default, it's just theos.
