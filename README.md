@@ -1,5 +1,5 @@
 # theos-action
-_Use Theos in your GitHub Actions to build iOS tweaks, even without a Mac._
+_Use Theos in your GitHub Actions to build iOS tweaks, even without owning a Mac._
 
 ### Wait, what's Theos?
 [Theos](https://github.com/theos/theos) is a cross-platform building suite for iOS and MacOS. It's mainly used for developing and compiling jailbroken iOS tweaks for the iPhone/iPad.
