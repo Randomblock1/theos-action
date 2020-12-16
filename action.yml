@@ -1,7 +1,6 @@
 name: 'Install Theos'
 description: 'Install Theos and prepare it for building projects'
-icon: download-cloud
-color: purple
+author: 'Randomblock1'
 inputs:
   theos-dir:
     description: 'Where to install Theos (relative to the repo workspace itself)'
@@ -47,3 +46,7 @@ runs:
         rm -r master.zip $TMP
         else echo "Theos SDKs already cached, skipping..."
         fi
+
+branding:
+  icon: download-cloud
+  color: purple
