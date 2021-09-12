@@ -7,11 +7,11 @@ inputs:
     required: false
     default: theos
   theos-src:
-    description: 'Where to fetch Theos from (github URL)'
+    description: 'Where to clone Theos itself from (git URL)'
     required: false
     default: 'https://github.com/theos/theos'
   theos-sdks:
-    description: 'Where to get the SDKs from (github URL)'
+    description: 'Where to clone the iOS SDKs from (git URL)'
     required: false
     default: 'https://github.com/theos/sdks'
 runs:
@@ -29,22 +29,24 @@ runs:
       shell: bash
       run: |
         if [ ! -d "${{ github.workspace }}/${{ inputs.theos-dir }}" ]; then
-        git clone ${{ inputs.theos-src }} ${{ github.workspace }}/${{ inputs.theos-dir }} --recursive
-        echo "Theos successfully obtained!"
-        else echo "Theos already cached, skipping..."
+          git clone ${{ inputs.theos-src }} ${{ github.workspace }}/${{ inputs.theos-dir }} --recursive
+          echo "Theos successfully obtained!"
+        else 
+          echo "Theos already cached, skipping..."
         fi
 
     - name: get sdks
       shell: bash
       run: |
         if [ ! -d "${{ github.workspace }}/${{ inputs.theos-dir }}/sdks" ]; then
-        cd ${{ github.workspace }}/${{ inputs.theos-dir }}/sdks
-        curl -sLO ${{ inputs.theos-sdks }}/archive/master.zip
-        TMP=$(mktemp -d)
-        7z x master.zip -o$TMP
-        mv $TMP/*-master/*.sdk $THEOS/sdks
-        rm -r master.zip $TMP
-        else echo "Theos SDKs already cached, skipping..."
+          cd ${{ github.workspace }}/${{ inputs.theos-dir }}/sdks
+          curl -sLO ${{ inputs.theos-sdks }}/archive/master.zip
+          TMP=$(mktemp -d)
+          7z x master.zip -o$TMP
+          mv $TMP/*-master/*.sdk $THEOS/sdks
+          rm -r master.zip $TMP
+        else
+          echo "Theos SDKs already cached, skipping..."
         fi
 
 branding:
