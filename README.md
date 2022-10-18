@@ -8,7 +8,7 @@ _Use Theos in your GitHub Actions to build iOS tweaks, even without owning a Mac
 
 ## Changlog
 
-- v2: Fixed SDK folder chache check. Better docs.
+- v1.1: Fixed SDK folder chache check. Better docs.
 
 - v1: Initial release. Only MacOS support, and only supports 1 SDK repo (although you can just run it a few times or do it yourself). It works, but it is probably not very efficient.
 
@@ -17,7 +17,7 @@ _Use Theos in your GitHub Actions to build iOS tweaks, even without owning a Mac
 You must use a MacOS runner (for now). Linux support may be added later if there is enough demand.
 
 ```bash
-- uses: Randomblock1/theos-action@v2
+- uses: Randomblock1/theos-action@v1
   with:
     # Defaults are filled in below.
     
