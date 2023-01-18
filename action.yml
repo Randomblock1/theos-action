@@ -22,7 +22,7 @@ runs:
       run: |
         brew install ldid make
         echo "THEOS=$GITHUB_WORKSPACE/${{ inputs.theos-dir }}" >> $GITHUB_ENV
-        PATH="/usr/local/opt/make/libexec/gnubin:$PATH" >> $GITHUB_ENV
+        PATH="$(brew --prefix make)/libexec/gnubin:$PATH" >> $GITHUB_ENV
         echo "Succesfully installed tools!"
 
     - name: get theos
