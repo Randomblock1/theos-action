@@ -18,6 +18,10 @@ inputs:
     description: "Where to clone the iOS SDKs from (git URL)"
     required: false
     default: "https://github.com/theos/sdks"
+  orion:
+    description: "Whether to enable Orion, which adds support for Swift tweaks"
+    required: false
+    default: "false"
 
 runs:
   using: "composite"
@@ -74,3 +78,12 @@ runs:
           mv $TMP/*-master/*.sdk $THEOS/sdks
           rm -r master.zip $TMP
         fi
+
+    - name: Enable Orion
+      shell: bash
+      if: inputs.orion == 'true'
+      run: |
+        cd ${{ inputs.theos-dir }}
+        git fetch
+        git checkout orion
+        git submodule update --init

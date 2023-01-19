@@ -28,6 +28,9 @@ You must use a MacOS or Linux runner. Windows is not supported, and probably nev
     # This is where the Theos SDKs will be git cloned from.
     # Useful for using frameworks that aren't in the official repo.
     theos-sdks: 'https://github.com/theos/sdks'
+
+    # Whether to enable Orion, which adds support for Swift tweaks
+    orion: 'false'
 ```
 
 ## Example
