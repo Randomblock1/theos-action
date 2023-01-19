@@ -40,7 +40,7 @@ runs:
 
     - name: Setup environment
       shell: bash
-      run: echo "THEOS=$GITHUB_WORKSPACE/${{ inputs.theos-dir }}" >> $GITHUB_ENV
+      run: echo "THEOS=${{ inputs.theos-dir }}" >> $GITHUB_ENV
 
     - name: Download Theos
       shell: bash
