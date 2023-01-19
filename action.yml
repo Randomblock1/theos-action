@@ -56,14 +56,18 @@ runs:
       shell: bash
       if: runner.os == 'Linux'
       run: |
-        TMP_DL=$(mktemp -d)
-        wget https://github.com/CRKatri/llvm-project/releases/download/swift-5.3.2-RELEASE/swift-5.3.2-RELEASE-ubuntu20.04.tar.zst -P $TMP_DL
-        TMP=$(mktemp -d)
-        tar -xvf $TMP_DL/swift-5.3.2-RELEASE-ubuntu20.04.tar.zst -C $TMP
-        mkdir -p $THEOS/toolchain/linux/iphone $THEOS/toolchain/swift
-        mv $TMP/swift-5.3.2-RELEASE-ubuntu20.04/* $THEOS/toolchain/linux/iphone/
-        ln -s $THEOS/toolchain/linux/iphone $THEOS/toolchain/swift
-        rm -Rf $TMP_DL $TMP
+        if [[ "$(ls ${{ inputs.theos-dir }}/sdks)" ]]; then
+          echo "Linux toolchain already cached, skipping..."
+        else
+          TMP_DL=$(mktemp -d)
+          wget https://github.com/CRKatri/llvm-project/releases/download/swift-5.3.2-RELEASE/swift-5.3.2-RELEASE-ubuntu20.04.tar.zst -P $TMP_DL
+          TMP=$(mktemp -d)
+          tar -xvf $TMP_DL/swift-5.3.2-RELEASE-ubuntu20.04.tar.zst -C $TMP
+          mkdir -p $THEOS/toolchain/linux/iphone $THEOS/toolchain/swift
+          mv $TMP/swift-5.3.2-RELEASE-ubuntu20.04/* $THEOS/toolchain/linux/iphone/
+          ln -s $THEOS/toolchain/linux/iphone $THEOS/toolchain/swift
+          rm -Rf $TMP_DL $TMP
+        fi
 
     - name: Get SDKs
       shell: bash
