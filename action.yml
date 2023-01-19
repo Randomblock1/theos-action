@@ -36,7 +36,7 @@ runs:
     - name: Setup (Linux)
       shell: bash
       if: runner.os == 'Linux'
-      run: sudo apt install build-essential fakeroot libtinfo5 libz3-dev rsync curl perl unzip git zstd
+      run: sudo apt install build-essential fakeroot libtinfo5 libz3-dev rsync curl perl unzip git zstd libplist-utils
 
     - name: Setup environment
       shell: bash
@@ -47,9 +47,9 @@ runs:
       run: |
         if [ ! -d "${{ inputs.theos-dir }}" ]; then
           git clone ${{ inputs.theos-src }} ${{ inputs.theos-dir }} --recursive
-          echo "Theos successfully obtained!"
+          echo "Theos successfully downloaded."
         else
-          echo "Theos already cached, skipping..."
+          echo "Theos already cached."
         fi
 
     - name: Get toolchain (Linux)
