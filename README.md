@@ -1,34 +1,32 @@
 # theos-action
 
-_Use Theos in your GitHub Actions to build iOS tweaks, even without owning a Mac._
+Build Theos projects (iOS tweaks) with GitHub Actions easily.
 
 ## Wait, what's Theos?
 
 [Theos](https://github.com/theos/theos) is a cross-platform building suite for iOS and MacOS. It's mainly used for developing and compiling jailbroken iOS tweaks for the iPhone/iPad.
 
-## Changlog
+## Why?
 
-- v1.1: Fixed SDK folder chache check. Better docs.
-
-- v1: Initial release. Only MacOS support, and only supports 1 SDK repo (although you can just run it a few times or do it yourself). It works, but it is probably not very efficient.
+Theos is a bit of a pain to set up. It requires a lot of dependencies, it takes a considerable amount of storage space, and it's not all that easy to get it working on a CI server. Additionally, this allows people to build their tweaks without having to install Xcode on their own machine, or even without a computer at all!
 
 ## Usage
 
-You must use a MacOS runner (for now). Linux support may be added later if there is enough demand.
+You must use a MacOS or Linux runner. Windows is not supported, and probably never will be.
 
 ```bash
 - uses: Randomblock1/theos-action@v1
   with:
     # Defaults are filled in below.
     
-    # This is where Theos is stored, relative to the runner workspace.
+    # This is where Theos is downloaded to.
     theos-dir: 'theos'
     
     # This is where Theos will be git cloned from.
     theos-src: 'https://github.com/theos/theos'
     
     # This is where the Theos SDKs will be git cloned from.
-    # Useful for compiling using newer frameworks that aren't in the official repo yet.
+    # Useful for using frameworks that aren't in the official repo.
     theos-sdks: 'https://github.com/theos/sdks'
 ```
 
@@ -44,4 +42,4 @@ Feel free to submit any issues or pull requests.
 
 ## License
 
-This project is released under the [MIT License](LICENSE)
+This project is released under the [MIT License](LICENSE).
