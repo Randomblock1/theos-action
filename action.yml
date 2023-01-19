@@ -15,7 +15,7 @@ inputs:
     required: false
     default: "https://github.com/theos/theos"
   theos-sdks:
-    description: "Where to clone the iOS SDKs from (git URL)"
+    description: "Where to clone the iOS SDKs from (GitHub repository URL)"
     required: false
     default: "https://github.com/theos/sdks"
   orion:
@@ -60,7 +60,7 @@ runs:
           echo "Linux toolchain already cached, skipping..."
         else
           TMP_DL=$(mktemp -d)
-          wget https://github.com/CRKatri/llvm-project/releases/download/swift-5.3.2-RELEASE/swift-5.3.2-RELEASE-ubuntu20.04.tar.zst -P $TMP_DL
+          wget --no-verbose https://github.com/CRKatri/llvm-project/releases/download/swift-5.3.2-RELEASE/swift-5.3.2-RELEASE-ubuntu20.04.tar.zst -P $TMP_DL
           TMP=$(mktemp -d)
           tar -xvf $TMP_DL/swift-5.3.2-RELEASE-ubuntu20.04.tar.zst -C $TMP
           mkdir -p $THEOS/toolchain/linux/iphone $THEOS/toolchain/swift
@@ -76,7 +76,7 @@ runs:
           echo "Theos SDKs already cached, skipping..."
         else
           cd ${{ inputs.theos-dir }}/sdks
-          curl -sLO ${{ inputs.theos-sdks }}/archive/master.zip
+          wget --no-verbose ${{ inputs.theos-sdks }}/archive/master.zip
           TMP=$(mktemp -d)
           7z x master.zip -o$TMP
           mv $TMP/*-master/*.sdk $THEOS/sdks

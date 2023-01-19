@@ -25,7 +25,7 @@ You must use a MacOS or Linux runner. Windows is not supported, and probably nev
     # This is where Theos will be git cloned from.
     theos-src: 'https://github.com/theos/theos'
     
-    # This is where the Theos SDKs will be git cloned from.
+    # This is where the Theos SDKs will be downloaded from.
     # Useful for using frameworks that aren't in the official repo.
     theos-sdks: 'https://github.com/theos/sdks'
 
