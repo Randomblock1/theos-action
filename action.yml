@@ -36,7 +36,7 @@ runs:
     - name: Setup (Linux)
       shell: bash
       if: runner.os == 'Linux'
-      run: sudo apt install build-essential fakeroot libtinfo5 libz3-dev rsync curl perl unzip git zstd libplist-utils
+      run: sudo apt install build-essential fakeroot libtinfo5 libz3-dev rsync curl perl unzip git libplist-utils
 
     - name: Setup environment
       shell: bash
@@ -60,13 +60,9 @@ runs:
           echo "Linux toolchain already cached, skipping..."
         else
           TMP_DL=$(mktemp -d)
-          wget --no-verbose https://github.com/CRKatri/llvm-project/releases/download/swift-5.3.2-RELEASE/swift-5.3.2-RELEASE-ubuntu20.04.tar.zst -P $TMP_DL
-          TMP=$(mktemp -d)
-          tar -xvf $TMP_DL/swift-5.3.2-RELEASE-ubuntu20.04.tar.zst -C $TMP
-          mkdir -p $THEOS/toolchain/linux/iphone $THEOS/toolchain/swift
-          mv $TMP/swift-5.3.2-RELEASE-ubuntu20.04/* $THEOS/toolchain/linux/iphone/
-          ln -s $THEOS/toolchain/linux/iphone $THEOS/toolchain/swift
-          rm -Rf $TMP_DL $TMP
+          wget --no-verbose https://github.com/kabiroberai/swift-toolchain-linux/releases/download/v2.2.2/swift-5.7-ubuntu22.04.tar.xz -P $TMP_DL
+          tar -xvJ $TMP_DL/swift-5.7-ubuntu22.04.tar.xz -C $THEOS/toolchain
+          rm -Rf $TMP_DL
         fi
 
     - name: Get SDKs
