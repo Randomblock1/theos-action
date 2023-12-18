@@ -60,8 +60,8 @@ runs:
           echo "Linux toolchain already cached, skipping..."
         else
           TMP_DL=$(mktemp -d)
-          wget --no-verbose https://github.com/kabiroberai/swift-toolchain-linux/releases/download/v2.2.2/swift-5.7-ubuntu22.04.tar.xz -P $TMP_DL
-          tar -xvf $TMP_DL/swift-5.7-ubuntu22.04.tar.xz -C $THEOS/toolchain
+          wget --no-verbose https://github.com/kabiroberai/swift-toolchain-linux/releases/download/v2.3.0/swift-5.8-ubuntu22.04.tar.xz -P $TMP_DL
+          tar -xvf $TMP_DL/swift-5.8-ubuntu22.04.tar.xz -C $THEOS/toolchain
           rm -Rf $TMP_DL
         fi
 
