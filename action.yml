@@ -18,6 +18,10 @@ inputs:
     description: "Where to clone the iOS SDKs from (GitHub repository URL)"
     required: false
     default: "https://github.com/theos/sdks"
+  theos-sdks-branch:
+    description: "Which branch to clone from SDK repo"
+    required: false
+    default: "master"
   orion:
     description: "Whether to enable Orion, which adds support for Swift tweaks"
     required: false
@@ -72,11 +76,11 @@ runs:
           echo "Theos SDKs already cached, skipping..."
         else
           cd ${{ inputs.theos-dir }}/sdks
-          wget --no-verbose ${{ inputs.theos-sdks }}/archive/master.zip
+          wget --no-verbose ${{ inputs.theos-sdks }}/archive/${{ inputs.theos-sdks-branch }}.zip
           TMP=$(mktemp -d)
-          7z x master.zip -o$TMP
-          mv $TMP/*-master/*.sdk $THEOS/sdks
-          rm -r master.zip $TMP
+          7z x ${{ inputs.theos-sdks-branch }}.zip -o$TMP
+          mv $TMP/*-${{ inputs.theos-sdks-branch }}/*.sdk $THEOS/sdks
+          rm -r ${{ inputs.theos-sdks-branch }}.zip $TMP
         fi
 
     - name: Enable Orion

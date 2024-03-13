@@ -17,7 +17,7 @@ You must use a MacOS or Linux runner. Windows is not supported, and probably nev
 ```bash
 - uses: Randomblock1/theos-action@v1
   with:
-    # Defaults are filled in below.
+    # All of these are optional. Defaults are filled in below.
     
     # This is where Theos is downloaded to.
     theos-dir: 'theos'
@@ -29,7 +29,10 @@ You must use a MacOS or Linux runner. Windows is not supported, and probably nev
     # Useful for using frameworks that aren't in the official repo.
     theos-sdks: 'https://github.com/theos/sdks'
 
-    # Whether to enable Orion, which adds support for Swift tweaks
+    # Which branch to clone from theos-sdks repo.
+    theos-sdks-branch: 'master'
+
+    # Whether to enable Orion, which adds support for tweaks coded in Swift
     orion: 'false'
 ```
 
