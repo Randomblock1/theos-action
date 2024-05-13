@@ -1,6 +1,9 @@
 name: CI
 
-on: [push]
+on: 
+  push:
+  schedule:
+    - cron: '0 9 15 * *'
 
 jobs:
   build-logos:
