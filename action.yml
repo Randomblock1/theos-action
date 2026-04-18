@@ -22,10 +22,6 @@ inputs:
     description: "Which branch to clone from SDK repo"
     required: false
     default: "master"
-  orion:
-    description: "Whether to enable Orion, which adds support for Swift tweaks"
-    required: false
-    default: "false"
 
 runs:
   using: "composite"
@@ -82,12 +78,3 @@ runs:
           mv $TMP/*-${{ inputs.theos-sdks-branch }}/*.sdk $THEOS/sdks
           rm -r ${{ inputs.theos-sdks-branch }}.zip $TMP
         fi
-
-    - name: Enable Orion
-      shell: bash
-      if: inputs.orion == 'true'
-      run: |
-        cd ${{ inputs.theos-dir }}
-        git fetch
-        git checkout orion
-        git submodule update --init
