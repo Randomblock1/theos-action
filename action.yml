@@ -22,6 +22,11 @@ inputs:
     description: "Which branch to clone from SDK repo"
     required: false
     default: "master"
+  orion:
+    description: "Deprecated. This input no longer has any effect."
+    required: false
+    default: "false"
+    deprecationMessage: "No longer needed because Orion support is always enabled."
 
 runs:
   using: "composite"
