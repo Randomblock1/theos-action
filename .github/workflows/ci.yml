@@ -1,35 +1,91 @@
-name: CI
-
-on: 
-  push:
-  schedule:
-    - cron: '0 9 15 * *'
+name: Build iOS Dylib
+on:
+  workflow_dispatch:
 
 jobs:
-  build-logos:
-    runs-on: ${{ matrix.os }}
-    strategy:
-      matrix:
-        os: [macos-latest, ubuntu-latest]
-
+  build:
+    runs-on: macos-latest
     steps:
-      - uses: actions/checkout@v6
-        with:
-          repository: Randomblock1/FleetsBGone
-          submodules: true
-
-      - name: Prepare Theos
-        uses: randomblock1/theos-action@main
-
-      - name: Build package
+      - name: Create Code File
         run: |
-          rm -f packages/*
-          make package FINALPACKAGE=1
+          cat << 'EOF' > main.cpp
+          #include <utility>
+          #include <algorithm>
+          #include <cstring>
 
-      - name: Upload package
-        uses: actions/upload-artifact@v7
+          extern "C" void MSHookFunction(void* symbol, void* replace, void** result);
+          extern "C" intptr_t _dyld_get_image_vmaddr_slide(uint32_t image_index);
+          extern "C" const char* _dyld_get_image_name(uint32_t image_index);
+          extern "C" uint32_t _dyld_image_count(void);
+
+          struct Vector2 { float x; float y; };
+          struct Touch {
+              int m_FingerId;
+              Vector2 m_Position;
+              Vector2 m_RawPosition;
+              Vector2 m_PositionDelta;
+              float m_TimeDelta;
+              int m_TapCount;
+              int m_Phase;
+          };
+
+          class SensitivityEngine {
+          private:
+              bool is_active{ true };
+              float multiplier{ 100.0f };
+              float max_clamp{ 999999.0f };
+
+          public:
+              void toggle(bool state) { is_active = state; }
+
+              void compute(Touch& touch) const {
+                  if (!is_active) return;
+                  float mod_x = touch.m_PositionDelta.x * multiplier;
+                  float mod_y = touch.m_PositionDelta.y * multiplier;
+                  touch.m_PositionDelta.x = std::clamp(mod_x, -max_clamp, max_clamp);
+                  touch.m_PositionDelta.y = std::clamp(mod_y, -max_clamp, max_clamp);
+              }
+          };
+
+          static SensitivityEngine g_engine;
+          static Touch(*orig_GetTouch)(int index) = nullptr;
+
+          static Touch replacement_GetTouch(int index) {
+              Touch touch = orig_GetTouch(index);
+              g_engine.compute(touch);
+              return touch;
+          }
+
+          static uintptr_t get_UnityFramework_base() {
+              uint32_t count = _dyld_image_count();
+              for (uint32_t i = 0; i < count; i++) {
+                  const char* name = _dyld_get_image_name(i);
+                  if (name && strstr(name, "UnityFramework.framework/UnityFramework")) {
+                      return _dyld_get_image_vmaddr_slide(i);
+                  }
+              }
+              return 0;
+          }
+
+          extern "C" __attribute__((constructor)) static void initializer() {
+              uintptr_t baseAddress = get_UnityFramework_base();
+              if (baseAddress == 0) return;
+
+              uintptr_t targetOffset = 0x53D98E0; 
+              void* validTarget = (void*)(baseAddress + targetOffset);
+
+              if (validTarget) {
+                  MSHookFunction(validTarget, (void*)replacement_GetTouch, (void**)&orig_GetTouch);
+              }
+          }
+          EOF
+
+      - name: Compile to iOS ARM64 Dylib
+        run: |
+          xcrun -sdk iphoneos clang++ -dynamiclib -arch arm64 -std=c++17 main.cpp -o mod.dylib -framework Foundation
+
+      - name: Upload Thanh Pham dylib
+        uses: actions/upload-artifact@v4
         with:
-          name: "Package built by ${{ matrix.os }}"
-          path: ${{ github.workspace }}/packages/*.deb
-
-  # TODO: Add a job to build an Orion tweak
+          name: Tweak_Do_Nhay_FF
+          path: mod.dylib
