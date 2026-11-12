@@ -90,9 +90,10 @@ runs:
           echo "Theos SDKs already cached, skipping..."
         else
           cd ${{ inputs.theos-dir }}/sdks
-          wget --no-verbose ${{ inputs.theos-sdks }}/archive/${{ inputs.theos-sdks-branch }}.zip
+          # tar.gz, not zip: macOS unzip fails on symlinks with absolute targets, which the SDKs contain
+          wget --no-verbose ${{ inputs.theos-sdks }}/archive/${{ inputs.theos-sdks-branch }}.tar.gz
           TMP=$(mktemp -d)
-          unzip -q ${{ inputs.theos-sdks-branch }}.zip -d $TMP
+          tar -xzf ${{ inputs.theos-sdks-branch }}.tar.gz -C $TMP
           mv $TMP/*-${{ inputs.theos-sdks-branch }}/*.sdk $THEOS/sdks
-          rm -r ${{ inputs.theos-sdks-branch }}.zip $TMP
+          rm -r ${{ inputs.theos-sdks-branch }}.tar.gz $TMP
         fi
