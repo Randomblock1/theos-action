@@ -9,19 +9,25 @@ jobs:
   build-logos:
     runs-on: ${{ matrix.os }}
     strategy:
+      fail-fast: false
       matrix:
-        os: [macos-latest, ubuntu-latest]
+        os: [macos-latest, ubuntu-latest, ubuntu-24.04, ubuntu-26.04]
 
     steps:
+      - uses: actions/checkout@v6
+
       - uses: actions/checkout@v6
         with:
           repository: Randomblock1/FleetsBGone
           submodules: true
+          path: tweak
 
+      # Test the action from the commit being built, not whatever is on main
       - name: Prepare Theos
-        uses: randomblock1/theos-action@main
+        uses: ./
 
       - name: Build package
+        working-directory: tweak
         run: |
           rm -f packages/*
           make package FINALPACKAGE=1
@@ -30,6 +36,6 @@ jobs:
         uses: actions/upload-artifact@v7
         with:
           name: "Package built by ${{ matrix.os }}"
-          path: ${{ github.workspace }}/packages/*.deb
+          path: ${{ github.workspace }}/tweak/packages/*.deb
 
   # TODO: Add a job to build an Orion tweak

@@ -41,7 +41,20 @@ runs:
     - name: Setup (Linux)
       shell: bash
       if: runner.os == 'Linux'
-      run: sudo apt install build-essential fakeroot rsync curl perl zip git libxml2 libtinfo6 libz3-dev libplist-utils
+      run: |
+        available() { apt-cache policy "$1" 2>/dev/null | grep 'Candidate: [^(]' >/dev/null; }
+        # Ubuntu 26.04+ replaced libxml2 (libxml2.so.2) with libxml2-16 (libxml2.so.16)
+        LIBXML2=$(available libxml2 && echo libxml2 || echo libxml2-16)
+        # Ubuntu 26.04+ split ld.gold, which the toolchain's swiftc links host tools with, out of binutils
+        GOLD=$(available binutils-gold && echo binutils-gold || true)
+        sudo apt install build-essential fakeroot rsync curl perl zip git $LIBXML2 $GOLD libncurses6 libtinfo6 libz3-dev libplist-utils
+        # The toolchain's swift-build, lld and lldb won't start without libxml2.so.2. Theos builds
+        # work with it pointing at libxml2.so.16; the loader only prints a harmless
+        # "no version information available" warning.
+        LIBDIR=/usr/lib/$(dpkg-architecture -qDEB_HOST_MULTIARCH)
+        if [ ! -e $LIBDIR/libxml2.so.2 ] && [ -e $LIBDIR/libxml2.so.16 ]; then
+          sudo ln -s libxml2.so.16 $LIBDIR/libxml2.so.2
+        fi
 
     - name: Setup environment
       shell: bash
